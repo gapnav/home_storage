@@ -7,7 +7,7 @@ See [architecture.md](architecture.md) for design decisions and data model.
 ## Phase 0 — Foundation
 
 - [x] 0.1 Git init + initial commit of current hello-world state
-- [ ] 0.2 Remove hello-world slice: `api/v1/hello_controller.rb`, its route, `frontend/src/services/helloService.ts`, `frontend/src/components/HelloMessage.tsx`, and update `App.tsx` to a blank placeholder (no broken imports)
+- [x] 0.2 Remove hello-world slice: `api/v1/hello_controller.rb`, its route, `frontend/src/services/helloService.ts`, `frontend/src/components/HelloMessage.tsx`, and update `App.tsx` to a blank placeholder (no broken imports)
 
 ---
 
