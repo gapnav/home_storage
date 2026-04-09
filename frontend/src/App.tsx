@@ -2,6 +2,7 @@ import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { Node } from "@/types/node";
 import { useDeleteNode } from "@/hooks/useNodes";
+import { useDebounce } from "@/hooks/useDebounce";
 import { NodeBrowser } from "@/components/NodeBrowser/NodeBrowser";
 import { NodeForm } from "@/components/NodeForm/NodeForm";
 import { SearchBar } from "@/components/SearchBar/SearchBar";
@@ -15,10 +16,11 @@ const queryClient = new QueryClient();
 
 const AppContent = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedQuery = useDebounce(searchQuery, 300);
   const [formState, setFormState] = useState<FormState | null>(null);
   const deleteNode = useDeleteNode();
 
-  const isSearching = searchQuery.trim().length > 0;
+  const isSearching = debouncedQuery.trim().length > 0;
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
@@ -36,7 +38,7 @@ const AppContent = () => {
 
       {isSearching ? (
         <SearchResults
-          query={searchQuery}
+          query={debouncedQuery}
           onDismiss={() => setSearchQuery("")}
           onEdit={(node) => setFormState({ mode: "edit", node })}
           onDelete={(id) => deleteNode.mutate(id)}
