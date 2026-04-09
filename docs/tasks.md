@@ -31,9 +31,9 @@ See [architecture.md](architecture.md) for design decisions and data model.
 
 ## Phase 3 — Frontend: Data layer
 
-- [ ] 3.1 `frontend/src/types/node.ts` — Node, NodeType, BreadcrumbItem, NodeDetail types
-- [ ] 3.2 `frontend/src/services/nodesService.ts` + `nodesService.test.ts`
-- [ ] 3.3 `frontend/src/hooks/useNodes.ts` + `useNodes.test.ts` — query hooks (`useRootNodes`, `useNode`, `useSearchNodes`) and mutation hooks (`useCreateNode`, `useUpdateNode`, `useMoveNode`, `useDeleteNode`)
+- [x] 3.1 `frontend/src/types/node.ts` — Node, NodeType, BreadcrumbItem, NodeDetail types
+- [x] 3.2 `frontend/src/services/nodesService.ts` + `nodesService.test.ts`
+- [x] 3.3 `frontend/src/hooks/useNodes.ts` + `useNodes.test.ts` — query hooks (`useRootNodes`, `useNode`, `useSearchNodes`) and mutation hooks (`useCreateNode`, `useUpdateNode`, `useMoveNode`, `useDeleteNode`)
 
 ---
 
