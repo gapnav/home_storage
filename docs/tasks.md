@@ -39,7 +39,7 @@ See [architecture.md](architecture.md) for design decisions and data model.
 
 ## Phase 4 — Frontend: UI components
 
-- [ ] 4.1 `Breadcrumb.tsx` + `Breadcrumb.test.tsx`
+- [x] 4.1 `Breadcrumb.tsx` + `Breadcrumb.test.tsx`
 - [ ] 4.2 `NodeRow.tsx` + `NodeRow.test.tsx`
 - [ ] 4.3 `NodeBrowser.tsx` + `NodeBrowser.test.tsx`
 - [ ] 4.4 `NodeForm.tsx` + `NodeForm.test.tsx`
