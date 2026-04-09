@@ -18,3 +18,5 @@ export interface NodeDetail extends Node {
   path: BreadcrumbItem[];
   children: Node[];
 }
+
+export type FlatNode = Pick<Node, "id" | "title" | "parentId" | "nodeType"> & { depth: number };

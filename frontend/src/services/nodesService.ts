@@ -72,3 +72,6 @@ export const updateNode = (id: number, params: UpdateNodeParams): Promise<Node> 
 
 export const deleteNode = (id: number): Promise<void> =>
   request<void>(`/nodes/${id}`, { method: "DELETE" });
+
+export const fetchAllNodes = (): Promise<Node[]> =>
+  request<Node[]>("/nodes?flat=true");

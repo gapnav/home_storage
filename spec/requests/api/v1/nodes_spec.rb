@@ -70,6 +70,38 @@ RSpec.describe "Api::V1::Nodes", type: :request do
         expect(json_data.pluck("id")).to contain_exactly(box.id)
       end
     end
+
+    context "with flat=true" do
+      let!(:root1)      { create(:node, :storage, title: "Garage") }
+      let!(:root2)      { create(:node, :storage, title: "Attic") }
+      let!(:child)      { create(:node, :storage, title: "Shelf", parent: root1) }
+      let!(:grandchild) { create(:node, :thing, title: "Hammer", parent: child) }
+
+      it "returns all nodes in one request with status 200" do
+        get "/api/v1/nodes", params: { flat: true }
+        expect(response).to have_http_status(:ok)
+        expect(json_data.pluck("id")).to contain_exactly(root1.id, root2.id, child.id, grandchild.id)
+      end
+
+      it "returns lightweight nodes without path or children" do
+        get "/api/v1/nodes", params: { flat: true }
+        node = json_data.first
+        expect(node.key?("path")).to be false
+        expect(node.key?("children")).to be false
+      end
+
+      it "includes parentId for non-root nodes" do
+        get "/api/v1/nodes", params: { flat: true }
+        hammer = json_data.find { |n| n["id"] == child.id }
+        expect(hammer["parentId"]).to eq(root1.id)
+      end
+
+      it "returns parentId as null for root nodes" do
+        get "/api/v1/nodes", params: { flat: true }
+        garage = json_data.find { |n| n["id"] == root1.id }
+        expect(garage["parentId"]).to be_nil
+      end
+    end
   end
 
   describe "GET /api/v1/nodes/:id" do

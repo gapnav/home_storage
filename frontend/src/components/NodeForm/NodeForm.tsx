@@ -5,6 +5,7 @@ import { TextInput } from "@/components/ui/TextInput";
 import { TextArea } from "@/components/ui/TextArea";
 import { FieldLabel } from "@/components/ui/FieldLabel";
 import { ActionButton } from "@/components/ui/ActionButton";
+import { ParentPicker } from "./ParentPicker";
 
 interface CreateProps {
   mode: "create";
@@ -29,6 +30,7 @@ export const NodeForm = (props: Props) => {
   const [nodeType, setNodeType] = useState<NodeType>("storage");
   const [description, setDescription] = useState(initial?.description ?? "");
   const [code, setCode] = useState(initial?.code ?? "");
+  const [parentId, setParentId] = useState<number | null>(initial?.parentId ?? null);
 
   const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -66,6 +68,7 @@ export const NodeForm = (props: Props) => {
             title,
             description: description || null,
             code: code || null,
+            parentId,
           },
         },
         { onSuccess: onClose },
@@ -125,6 +128,18 @@ export const NodeForm = (props: Props) => {
               onChange={(e) => setTitle(e.target.value)}
             />
           </div>
+
+          {mode === "edit" && (
+            <div className="flex flex-col gap-1">
+              <FieldLabel htmlFor="node-parent">Parent</FieldLabel>
+              <ParentPicker
+                id="node-parent"
+                nodeId={props.node.id}
+                value={parentId}
+                onChange={setParentId}
+              />
+            </div>
+          )}
 
           <div className="flex flex-col gap-1">
             <FieldLabel htmlFor="node-description">Description</FieldLabel>

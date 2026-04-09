@@ -6,6 +6,8 @@ module Api
       def index
         nodes = if params[:q].present?
           Node.where(Node.arel_table[:title].matches("%#{params[:q].strip}%"))
+        elsif params[:flat].present?
+          Node.all.order(:id)
         elsif params[:parent_id]
           parent = Node.find_by(id: params[:parent_id])
           return render json: { errors: [ "Parent not found" ] }, status: :not_found unless parent

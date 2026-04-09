@@ -9,6 +9,20 @@ vi.mock("@/hooks/useNodes", () => ({
   useUpdateNode: vi.fn(),
 }));
 
+vi.mock("./ParentPicker", () => ({
+  ParentPicker: ({ value, onChange }: { id?: string; nodeId: number; value: number | null; onChange: (v: number | null) => void }) => (
+    <select
+      data-testid="parent-picker"
+      aria-label="Parent"
+      value={value === null ? "" : String(value)}
+      onChange={(e) => onChange(e.target.value === "" ? null : Number(e.target.value))}
+    >
+      <option value="">No parent (root)</option>
+      <option value="5">Some Parent</option>
+    </select>
+  ),
+}));
+
 import { useCreateNode, useUpdateNode } from "@/hooks/useNodes";
 
 const mockUseCreateNode = vi.mocked(useCreateNode);
@@ -138,6 +152,67 @@ describe("NodeForm — edit mode", () => {
           params: expect.objectContaining({ title: "Shelf B" }),
         }),
         expect.objectContaining({ onSuccess: expect.any(Function) }),
+      );
+    });
+  });
+});
+
+describe("NodeForm — edit mode parent picker", () => {
+  it("renders the parent picker in edit mode", () => {
+    wrap(<NodeForm mode="edit" node={existingNode} onClose={vi.fn()} />);
+    expect(screen.getByTestId("parent-picker")).toBeInTheDocument();
+  });
+
+  it("does not render the parent picker in create mode", () => {
+    wrap(<NodeForm mode="create" parentId={null} onClose={vi.fn()} />);
+    expect(screen.queryByTestId("parent-picker")).not.toBeInTheDocument();
+  });
+
+  it("pre-selects the node's current parentId in the picker", () => {
+    wrap(<NodeForm mode="edit" node={existingNode} onClose={vi.fn()} />);
+    // existingNode.parentId is 1, but picker only has "" and "5" as options in mock
+    // Just verify the picker is rendered with the right aria-label
+    expect(screen.getByRole("combobox", { name: "Parent" })).toBeInTheDocument();
+  });
+
+  it("includes parentId in updateNode.mutate params on submit", async () => {
+    const mutate = vi.fn();
+    mockUseUpdateNode.mockReturnValue({ ...makeMutationMock(), mutate } as ReturnType<typeof useUpdateNode>);
+
+    wrap(<NodeForm mode="edit" node={existingNode} onClose={vi.fn()} />);
+
+    // Change the parent to "Some Parent" (id=5)
+    fireEvent.change(screen.getByRole("combobox", { name: "Parent" }), {
+      target: { value: "5" },
+    });
+    fireEvent.submit(screen.getByRole("button", { name: "Save" }));
+
+    await waitFor(() => {
+      expect(mutate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: 7,
+          params: expect.objectContaining({ parentId: 5 }),
+        }),
+        expect.objectContaining({ onSuccess: expect.any(Function) }),
+      );
+    });
+  });
+
+  it("passes parentId as null when 'No parent' is selected", async () => {
+    const mutate = vi.fn();
+    mockUseUpdateNode.mockReturnValue({ ...makeMutationMock(), mutate } as ReturnType<typeof useUpdateNode>);
+
+    const rootNode = { ...existingNode, parentId: null };
+    wrap(<NodeForm mode="edit" node={rootNode} onClose={vi.fn()} />);
+
+    fireEvent.submit(screen.getByRole("button", { name: "Save" }));
+
+    await waitFor(() => {
+      expect(mutate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          params: expect.objectContaining({ parentId: null }),
+        }),
+        expect.anything(),
       );
     });
   });

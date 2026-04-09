@@ -57,7 +57,7 @@ RSpec.describe Node, type: :model do
       shed = create(:node, title: "Shed")
       box = create(:node, title: "Box", parent: shed)
 
-      expect(box.path_nodes).to eq([shed, box])
+      expect(box.path_nodes).to eq([ shed, box ])
     end
 
     it "restricts deletion of nodes with children" do

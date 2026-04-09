@@ -19,6 +19,7 @@ export const nodeKeys = {
   list: (parentId: number | null) => ["nodes", "list", parentId] as const,
   detail: (id: number) => ["nodes", id] as const,
   search: (q: string) => ["nodes", "search", q] as const,
+  flat: ["nodes", "flat"] as const,
 };
 
 export const useNodes = (parentId?: number | null, enabled = true) =>

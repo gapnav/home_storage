@@ -10,7 +10,7 @@ class Node < ApplicationRecord
   scope :roots, -> { where(ancestry: nil) }
 
   def path_nodes
-    ancestors.to_a + [self]
+    ancestors.to_a + [ self ]
   end
 
   private
