@@ -21,11 +21,12 @@ export const nodeKeys = {
   search: (q: string) => ["nodes", "search", q] as const,
 };
 
-export const useNodes = (parentId?: number | null) =>
+export const useNodes = (parentId?: number | null, enabled = true) =>
   useQuery({
     queryKey: nodeKeys.list(parentId ?? null),
     queryFn: () =>
       parentId != null ? fetchChildNodes(parentId) : fetchRootNodes(),
+    enabled,
   });
 
 export const useNode = (id: number | null) => {
