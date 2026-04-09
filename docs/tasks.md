@@ -25,7 +25,7 @@ See [architecture.md](architecture.md) for design decisions and data model.
 - [x] 2.1 `Nodes::CreateService` + `spec/services/nodes/create_service_spec.rb`
 - [x] 2.2 `Nodes::MoveService` + `spec/services/nodes/move_service_spec.rb`
 - [x] 2.3 `Nodes::DestroyService` + `spec/services/nodes/destroy_service_spec.rb`
-- [ ] 2.4 `Api::V1::NodesController` + routes + `spec/requests/api/v1/nodes_spec.rb`
+- [x] 2.4 `Api::V1::NodesController` + routes + `spec/requests/api/v1/nodes_spec.rb`
 
 ---
 
