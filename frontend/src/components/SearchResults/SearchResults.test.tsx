@@ -46,7 +46,7 @@ const wrap = (ui: React.ReactElement) => {
 };
 
 const defaultProps = {
-  onNavigate: vi.fn() as (id: number) => void,
+  onDismiss: vi.fn() as () => void,
   onEdit: vi.fn() as (node: Node) => void,
   onDelete: vi.fn() as (id: number) => void,
 };
@@ -100,19 +100,19 @@ describe("SearchResults", () => {
     expect(screen.getByText("Lamp")).toBeInTheDocument();
   });
 
-  it("calls onNavigate when a storage result title is clicked", () => {
-    const onNavigate = vi.fn();
+  it("calls onDismiss when a storage result title is clicked", () => {
+    const onDismiss = vi.fn();
     mockUseSearchNodes.mockReturnValue(makeQueryMock({ data: [nodeA] }));
     wrap(
       <SearchResults
         query="box"
-        onNavigate={onNavigate}
+        onDismiss={onDismiss}
         onEdit={vi.fn()}
         onDelete={vi.fn()}
       />,
     );
     fireEvent.click(screen.getByRole("button", { name: "Box A" }));
-    expect(onNavigate).toHaveBeenCalledWith(1);
+    expect(onDismiss).toHaveBeenCalledTimes(1);
   });
 
   it("calls onEdit when the edit button is clicked", () => {
@@ -121,7 +121,7 @@ describe("SearchResults", () => {
     wrap(
       <SearchResults
         query="box"
-        onNavigate={vi.fn()}
+        onDismiss={vi.fn()}
         onEdit={onEdit}
         onDelete={vi.fn()}
       />,
@@ -136,7 +136,7 @@ describe("SearchResults", () => {
     wrap(
       <SearchResults
         query="box"
-        onNavigate={vi.fn()}
+        onDismiss={vi.fn()}
         onEdit={vi.fn()}
         onDelete={onDelete}
       />,

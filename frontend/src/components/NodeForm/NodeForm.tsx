@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Node, NodeType } from "@/types/node";
 import { useCreateNode, useUpdateNode } from "@/hooks/useNodes";
 import { TextInput } from "@/components/ui/TextInput";
@@ -29,6 +29,14 @@ export const NodeForm = (props: Props) => {
   const [nodeType, setNodeType] = useState<NodeType>("storage");
   const [description, setDescription] = useState(initial?.description ?? "");
   const [code, setCode] = useState(initial?.code ?? "");
+
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    dialogRef.current?.focus();
+    return () => previouslyFocused?.focus();
+  }, []);
 
   const createNode = useCreateNode();
   const updateNode = useUpdateNode();
@@ -67,10 +75,12 @@ export const NodeForm = (props: Props) => {
 
   return (
     <div
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-labelledby="node-form-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      tabIndex={-1}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 focus:outline-none"
     >
       <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
         <h2

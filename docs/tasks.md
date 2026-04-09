@@ -45,4 +45,4 @@ See [architecture.md](architecture.md) for design decisions and data model.
 - [x] 4.4 `NodeForm.tsx` + `NodeForm.test.tsx`
 - [x] 4.5 `SearchBar.tsx` + `SearchBar.test.tsx`
 - [x] 4.6 `SearchResults.tsx` + `SearchResults.test.tsx`
-- [ ] 4.7 Wire into `App.tsx` — replace placeholder with NodeBrowser + SearchBar
+- [x] 4.7 Wire into `App.tsx` — replace placeholder with NodeBrowser + SearchBar

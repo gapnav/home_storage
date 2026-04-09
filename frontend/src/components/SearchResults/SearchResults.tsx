@@ -4,12 +4,12 @@ import { NodeList } from "@/components/NodeBrowser/NodeList";
 
 interface Props {
   query: string;
-  onNavigate: (id: number) => void;
+  onDismiss: () => void;
   onEdit: (node: Node) => void;
   onDelete: (id: number) => void;
 }
 
-export const SearchResults = ({ query, onNavigate, onEdit, onDelete }: Props) => {
+export const SearchResults = ({ query, onDismiss, onEdit, onDelete }: Props) => {
   const { data, isLoading, error } = useSearchNodes(query);
 
   if (!query.trim()) return null;
@@ -22,7 +22,7 @@ export const SearchResults = ({ query, onNavigate, onEdit, onDelete }: Props) =>
       loadingMessage="Searching…"
       errorMessage={error?.message}
       emptyMessage={`No results for "${query}"`}
-      onNavigate={onNavigate}
+      onNavigate={onDismiss}
       onEdit={onEdit}
       onDelete={onDelete}
     />
