@@ -14,9 +14,9 @@ See [architecture.md](architecture.md) for design decisions and data model.
 ## Phase 1 — Backend: Data layer
 
 - [x] 1.1 Add `ancestry` gem to Gemfile + rebuild Docker image
-- [ ] 1.2 Create migration: `nodes` table (node_type enum, title, description, code, ancestry, parent_id)
-- [ ] 1.3 Run migration inside Docker
-- [ ] 1.4 `Node` model + `spec/models/node_spec.rb` — ancestry config, validations, scopes
+- [x] 1.2 Create migration: `nodes` table (node_type enum, title, description, code, ancestry, parent_id)
+- [x] 1.3 Run migration inside Docker
+- [x] 1.4 `Node` model + `spec/models/node_spec.rb` — ancestry config, validations, scopes
 
 ---
 

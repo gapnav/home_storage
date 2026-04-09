@@ -19,4 +19,7 @@ RUN bundle install
 
 COPY . .
 
+RUN chmod +x bin/docker-entrypoint.sh
+
 EXPOSE 3000
+ENTRYPOINT ["bin/docker-entrypoint.sh"]
