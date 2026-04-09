@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { Node } from "@/types/node";
 import { useNodes, useNode } from "@/hooks/useNodes";
 import { Breadcrumb } from "./Breadcrumb";
-import { NodeRow } from "./NodeRow";
+import { NodeList } from "./NodeList";
 import { PlusIcon } from "@/components/icons";
 
 interface Props {
@@ -30,39 +30,21 @@ export const NodeBrowser = ({ onCreateNode, onEditNode, onDeleteNode }: Props) =
   const path =
     currentNodeId !== null ? (detailQuery.data?.path ?? []) : [];
 
-  if (isLoading) {
-    return <p className="p-4 text-sm text-gray-500">Loading…</p>;
-  }
-
-  if (isError) {
-    return (
-      <p className="p-4 text-sm text-red-600">Failed to load. Please retry.</p>
-    );
-  }
-
   return (
     <div className="flex flex-col gap-4">
       {path.length > 0 && (
         <Breadcrumb path={path} onNavigate={setCurrentNodeId} />
       )}
 
-      <ul className="divide-y divide-gray-100">
-        {children.length === 0 ? (
-          <li className="py-4 text-center text-sm text-gray-400">
-            Nothing here yet.
-          </li>
-        ) : (
-          children.map((node) => (
-            <NodeRow
-              key={node.id}
-              node={node}
-              onNavigate={setCurrentNodeId}
-              onEdit={onEditNode}
-              onDelete={onDeleteNode}
-            />
-          ))
-        )}
-      </ul>
+      <NodeList
+        nodes={children}
+        isLoading={isLoading}
+        isError={isError}
+        emptyMessage="Nothing here yet."
+        onNavigate={setCurrentNodeId}
+        onEdit={onEditNode}
+        onDelete={onDeleteNode}
+      />
 
       <div className="flex justify-end">
         <button
