@@ -14,18 +14,13 @@ interface Props {
 export const NodeBrowser = ({ onCreateNode, onEditNode, onDeleteNode }: Props) => {
   const [currentNodeId, setCurrentNodeId] = useState<number | null>(null);
 
-  const rootQuery = useNodes(null, currentNodeId === null);
+  const childrenQuery = useNodes(currentNodeId);
   const detailQuery = useNode(currentNodeId);
 
-  const isLoading =
-    currentNodeId === null ? rootQuery.isLoading : detailQuery.isLoading;
-  const isError =
-    currentNodeId === null ? rootQuery.isError : detailQuery.isError;
+  const isLoading = childrenQuery.isLoading;
+  const isError = childrenQuery.isError;
 
-  const children: Node[] =
-    currentNodeId === null
-      ? (rootQuery.data ?? [])
-      : (detailQuery.data?.children ?? []);
+  const children: Node[] = childrenQuery.data ?? [];
 
   const path =
     currentNodeId !== null ? (detailQuery.data?.path ?? []) : [];
