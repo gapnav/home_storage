@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+import { useState } from "react";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import type { Node, NodeDetail } from "@/types/node";
 import { NodeBrowser } from "./NodeBrowser";
@@ -32,9 +33,27 @@ const shedDetail: NodeDetail = {
 };
 
 const defaultProps = {
+  currentNodeId: null as number | null,
+  onNavigate: vi.fn() as (id: number | null) => void,
   onCreateNode: vi.fn(),
   onEditNode: vi.fn(),
   onDeleteNode: vi.fn(),
+};
+
+// Stateful wrapper for tests that simulate navigation by clicking nodes.
+const renderWithState = (props: Partial<typeof defaultProps> = {}) => {
+  const Wrapper = () => {
+    const [currentNodeId, setCurrentNodeId] = useState<number | null>(null);
+    return (
+      <NodeBrowser
+        {...defaultProps}
+        {...props}
+        currentNodeId={currentNodeId}
+        onNavigate={setCurrentNodeId}
+      />
+    );
+  };
+  return render(<Wrapper />);
 };
 
 beforeEach(() => {
@@ -75,7 +94,12 @@ describe("NodeBrowser", () => {
 
   it("drills into a storage node and shows its children and breadcrumb", () => {
     mockUseNode.mockReturnValue({ data: shedDetail, isLoading: false, isError: false } as ReturnType<typeof useNode>);
-    render(<NodeBrowser {...defaultProps} />);
+    mockUseNodes.mockImplementation((parentId) => ({
+      data: parentId === null ? rootNodes : shedDetail.children,
+      isLoading: false,
+      isError: false,
+    }) as ReturnType<typeof useNodes>);
+    renderWithState();
 
     fireEvent.click(screen.getByRole("button", { name: "Shed" }));
 
@@ -85,7 +109,12 @@ describe("NodeBrowser", () => {
 
   it("navigates back to root via breadcrumb Home button", () => {
     mockUseNode.mockReturnValue({ data: shedDetail, isLoading: false, isError: false } as ReturnType<typeof useNode>);
-    render(<NodeBrowser {...defaultProps} />);
+    mockUseNodes.mockImplementation((parentId) => ({
+      data: parentId === null ? rootNodes : shedDetail.children,
+      isLoading: false,
+      isError: false,
+    }) as ReturnType<typeof useNodes>);
+    renderWithState();
 
     fireEvent.click(screen.getByRole("button", { name: "Shed" }));
     fireEvent.click(screen.getByRole("button", { name: "Home" }));
@@ -106,7 +135,12 @@ describe("NodeBrowser", () => {
   it("calls onCreateNode with current node id when Add item is clicked inside a node", () => {
     const onCreateNode = vi.fn();
     mockUseNode.mockReturnValue({ data: shedDetail, isLoading: false, isError: false } as ReturnType<typeof useNode>);
-    render(<NodeBrowser {...defaultProps} onCreateNode={onCreateNode} />);
+    mockUseNodes.mockImplementation((parentId) => ({
+      data: parentId === null ? rootNodes : shedDetail.children,
+      isLoading: false,
+      isError: false,
+    }) as ReturnType<typeof useNodes>);
+    renderWithState({ onCreateNode });
 
     fireEvent.click(screen.getByRole("button", { name: "Shed" }));
     fireEvent.click(screen.getByRole("button", { name: /add item/i }));
@@ -134,7 +168,12 @@ describe("NodeBrowser", () => {
   it("shows empty state and no breadcrumb when detail data is undefined after drilling in", () => {
     // detail query still loading or returned nothing
     mockUseNode.mockReturnValue({ data: undefined, isLoading: false, isError: false } as ReturnType<typeof useNode>);
-    render(<NodeBrowser {...defaultProps} />);
+    mockUseNodes.mockImplementation((parentId) => ({
+      data: parentId === null ? rootNodes : [],
+      isLoading: false,
+      isError: false,
+    }) as ReturnType<typeof useNodes>);
+    renderWithState();
 
     fireEvent.click(screen.getByRole("button", { name: "Shed" }));
 
@@ -144,7 +183,12 @@ describe("NodeBrowser", () => {
 
   it("shows loading state when drilled into a node that is still fetching", () => {
     mockUseNode.mockReturnValue({ data: undefined, isLoading: true, isError: false } as ReturnType<typeof useNode>);
-    render(<NodeBrowser {...defaultProps} />);
+    mockUseNodes.mockImplementation((parentId) =>
+      parentId === null
+        ? ({ data: rootNodes, isLoading: false, isError: false } as ReturnType<typeof useNodes>)
+        : ({ data: undefined, isLoading: true, isError: false } as ReturnType<typeof useNodes>),
+    );
+    renderWithState();
 
     fireEvent.click(screen.getByRole("button", { name: "Shed" }));
 

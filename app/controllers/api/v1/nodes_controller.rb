@@ -4,9 +4,12 @@ module Api
       before_action :set_node, only: [ :show, :update, :destroy ]
 
       def index
-        nodes = if params[:q].present?
-          Node.where(Node.arel_table[:title].matches("%#{params[:q].strip}%"))
-        elsif params[:flat].present?
+        if params[:q].present?
+          nodes = Node.where(Node.arel_table[:title].matches("%#{params[:q].strip}%"))
+          return render json: { data: nodes.map { |n| node_search_json(n) } }
+        end
+
+        nodes = if params[:flat].present?
           Node.all.order(:id)
         elsif params[:parent_id]
           parent = Node.find_by(id: params[:parent_id])
@@ -81,6 +84,15 @@ module Api
           code: node.code,
           parentId: node.parent_id
         }
+      end
+
+      # TODO: N+1 — node.ancestors hits the DB once per result.
+      # Fix: collect ancestor_ids from the in-memory ancestry string, batch-load
+      # in one query, build paths in memory. Acceptable for small personal datasets.
+      def node_search_json(node)
+        node_json(node).merge(
+          path: node.ancestors.map { |n| { id: n.id, title: n.title } }
+        )
       end
 
       def node_detail_json(node)

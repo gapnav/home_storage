@@ -69,6 +69,30 @@ RSpec.describe "Api::V1::Nodes", type: :request do
         get "/api/v1/nodes", params: { q: "  box  " }
         expect(json_data.pluck("id")).to contain_exactly(box.id)
       end
+
+      it "returns an empty path for root-level matches" do
+        get "/api/v1/nodes", params: { q: "box" }
+        result = json_data.find { |n| n["id"] == box.id }
+        expect(result["path"]).to eq([])
+      end
+
+      context "when the matching node is nested" do
+        let!(:grandparent) { create(:node, :storage, title: "Shed") }
+        let!(:parent)      { create(:node, :storage, title: "Shelf", parent: grandparent) }
+        let!(:nested_box)  { create(:node, :storage, title: "Small Box", parent: parent) }
+
+        it "includes ancestors in path order from root to direct parent" do
+          get "/api/v1/nodes", params: { q: "small box" }
+          result = json_data.find { |n| n["id"] == nested_box.id }
+          expect(result["path"].pluck("id")).to eq([ grandparent.id, parent.id ])
+        end
+
+        it "includes title for each ancestor" do
+          get "/api/v1/nodes", params: { q: "small box" }
+          result = json_data.find { |n| n["id"] == nested_box.id }
+          expect(result["path"].pluck("title")).to eq([ "Shed", "Shelf" ])
+        end
+      end
     end
 
     context "with flat=true" do

@@ -1,8 +1,8 @@
-import type { Node } from "@/types/node";
+import type { Node, BreadcrumbItem } from "@/types/node";
 import { NodeRow } from "./NodeRow";
 
 interface Props {
-  nodes: Node[];
+  nodes: Array<Node & { path?: BreadcrumbItem[] }>;
   isLoading: boolean;
   isError: boolean;
   emptyMessage: string;
@@ -48,6 +48,7 @@ export const NodeList = ({
         <NodeRow
           key={node.id}
           node={node}
+          path={node.path}
           onNavigate={onNavigate}
           onEdit={onEdit}
           onDelete={onDelete}

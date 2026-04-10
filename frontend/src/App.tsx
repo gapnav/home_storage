@@ -17,6 +17,7 @@ const queryClient = new QueryClient();
 const AppContent = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedQuery = useDebounce(searchQuery, 300);
+  const [currentNodeId, setCurrentNodeId] = useState<number | null>(null);
   const [formState, setFormState] = useState<FormState | null>(null);
   const deleteNode = useDeleteNode();
 
@@ -39,12 +40,14 @@ const AppContent = () => {
       {isSearching ? (
         <SearchResults
           query={debouncedQuery}
-          onDismiss={() => setSearchQuery("")}
+          onNavigate={(id) => { setCurrentNodeId(id); setSearchQuery(""); }}
           onEdit={(node) => setFormState({ mode: "edit", node })}
           onDelete={(id) => deleteNode.mutate(id)}
         />
       ) : (
         <NodeBrowser
+          currentNodeId={currentNodeId}
+          onNavigate={setCurrentNodeId}
           onCreateNode={(parentId) => setFormState({ mode: "create", parentId })}
           onEditNode={(node) => setFormState({ mode: "edit", node })}
           onDeleteNode={(id) => deleteNode.mutate(id)}

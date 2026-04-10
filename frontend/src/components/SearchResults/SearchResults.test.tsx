@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import type { Node } from "@/types/node";
+import type { Node, SearchNode } from "@/types/node";
 import { SearchResults } from "./SearchResults";
 
 vi.mock("@/hooks/useNodes", () => ({
@@ -20,22 +20,24 @@ const makeQueryMock = (overrides = {}) =>
     ...overrides,
   }) as ReturnType<typeof useSearchNodes>;
 
-const nodeA: Node = {
+const nodeA: SearchNode = {
   id: 1,
   nodeType: "storage",
   title: "Box A",
   description: null,
   code: "BA1",
   parentId: null,
+  path: [],
 };
 
-const nodeB: Node = {
+const nodeB: SearchNode = {
   id: 2,
   nodeType: "thing",
   title: "Lamp",
   description: null,
   code: null,
   parentId: 1,
+  path: [{ id: 1, title: "Box A" }],
 };
 
 const wrap = (ui: React.ReactElement) => {
@@ -46,7 +48,7 @@ const wrap = (ui: React.ReactElement) => {
 };
 
 const defaultProps = {
-  onDismiss: vi.fn() as () => void,
+  onNavigate: vi.fn() as (id: number | null) => void,
   onEdit: vi.fn() as (node: Node) => void,
   onDelete: vi.fn() as (id: number) => void,
 };
@@ -100,19 +102,31 @@ describe("SearchResults", () => {
     expect(screen.getByText("Lamp")).toBeInTheDocument();
   });
 
-  it("calls onDismiss when a storage result title is clicked", () => {
-    const onDismiss = vi.fn();
+  it("shows ancestor path for results with a non-empty path", () => {
+    mockUseSearchNodes.mockReturnValue(makeQueryMock({ data: [nodeB] }));
+    wrap(<SearchResults query="lamp" {...defaultProps} />);
+    expect(screen.getByText("Home / Box A")).toBeInTheDocument();
+  });
+
+  it("does not show a path for root-level results", () => {
+    mockUseSearchNodes.mockReturnValue(makeQueryMock({ data: [nodeA] }));
+    wrap(<SearchResults query="box" {...defaultProps} />);
+    expect(screen.queryByText(/^Home \//)).not.toBeInTheDocument();
+  });
+
+  it("calls onNavigate with the node id when a storage result title is clicked", () => {
+    const onNavigate = vi.fn();
     mockUseSearchNodes.mockReturnValue(makeQueryMock({ data: [nodeA] }));
     wrap(
       <SearchResults
         query="box"
-        onDismiss={onDismiss}
+        onNavigate={onNavigate}
         onEdit={vi.fn()}
         onDelete={vi.fn()}
       />,
     );
     fireEvent.click(screen.getByRole("button", { name: "Box A" }));
-    expect(onDismiss).toHaveBeenCalledTimes(1);
+    expect(onNavigate).toHaveBeenCalledWith(nodeA.id);
   });
 
   it("calls onEdit when the edit button is clicked", () => {
@@ -121,7 +135,7 @@ describe("SearchResults", () => {
     wrap(
       <SearchResults
         query="box"
-        onDismiss={vi.fn()}
+        onNavigate={vi.fn()}
         onEdit={onEdit}
         onDelete={vi.fn()}
       />,
@@ -136,7 +150,7 @@ describe("SearchResults", () => {
     wrap(
       <SearchResults
         query="box"
-        onDismiss={vi.fn()}
+        onNavigate={vi.fn()}
         onEdit={vi.fn()}
         onDelete={onDelete}
       />,

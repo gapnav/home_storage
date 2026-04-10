@@ -115,6 +115,31 @@ describe("NodeRow", () => {
     expect(onEdit).toHaveBeenCalledWith(storageNode);
   });
 
+  it("renders path breadcrumb when path is provided", () => {
+    render(
+      <NodeRow
+        node={thingNode}
+        path={[{ id: 10, title: "Garage" }, { id: 11, title: "Shelf" }]}
+        onNavigate={vi.fn()}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+      />,
+    );
+    expect(screen.getByText("Home / Garage / Shelf")).toBeInTheDocument();
+  });
+
+  it("does not render path breadcrumb when path is absent", () => {
+    render(
+      <NodeRow
+        node={storageNode}
+        onNavigate={vi.fn()}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+      />,
+    );
+    expect(screen.queryByText(/^Home \//)).not.toBeInTheDocument();
+  });
+
   it("calls onDelete with node id when delete button is clicked", () => {
     const onDelete = vi.fn();
     render(

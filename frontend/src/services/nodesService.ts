@@ -1,4 +1,4 @@
-import type { Node, NodeDetail } from "../types/node";
+import type { Node, NodeDetail, SearchNode } from "../types/node";
 import type { NodeType } from "../types/node";
 
 const BASE = "/api/v1";
@@ -41,8 +41,8 @@ export const fetchChildNodes = (parentId: number): Promise<Node[]> =>
 export const fetchNode = (id: number): Promise<NodeDetail> =>
   request<NodeDetail>(`/nodes/${id}`);
 
-export const searchNodes = (q: string): Promise<Node[]> =>
-  request<Node[]>(`/nodes?q=${encodeURIComponent(q)}`);
+export const searchNodes = (q: string): Promise<SearchNode[]> =>
+  request<SearchNode[]>(`/nodes?q=${encodeURIComponent(q)}`);
 
 export const createNode = (params: CreateNodeParams): Promise<Node> =>
   request<Node>("/nodes", {

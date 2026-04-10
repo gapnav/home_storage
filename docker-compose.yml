@@ -26,7 +26,6 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: postgres://home_storage:password@db/home_storage_development
       RAILS_ENV: development
       SECRET_KEY_BASE: dev_secret_key_base_not_used_in_prod
     depends_on:

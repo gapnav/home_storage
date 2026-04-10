@@ -1,14 +1,15 @@
-import type { Node } from "@/types/node";
+import type { Node, BreadcrumbItem } from "@/types/node";
 import { StorageIcon, ThingIcon, EditIcon, DeleteIcon } from "@/components/icons";
 
 interface Props {
   node: Node;
+  path?: BreadcrumbItem[];
   onNavigate: (id: number) => void;
   onEdit: (node: Node) => void;
   onDelete: (id: number) => void;
 }
 
-export const NodeRow = ({ node, onNavigate, onEdit, onDelete }: Props) => {
+export const NodeRow = ({ node, path, onNavigate, onEdit, onDelete }: Props) => {
   const isStorage = node.nodeType === "storage";
 
   return (
@@ -17,7 +18,7 @@ export const NodeRow = ({ node, onNavigate, onEdit, onDelete }: Props) => {
         {isStorage ? <StorageIcon /> : <ThingIcon />}
       </span>
 
-      <span className="min-w-0 flex-1">
+      <span className="min-w-0 flex-1 flex flex-col">
         {isStorage ? (
           <button
             type="button"
@@ -29,6 +30,11 @@ export const NodeRow = ({ node, onNavigate, onEdit, onDelete }: Props) => {
         ) : (
           <span className="truncate font-medium text-gray-900">
             {node.title}
+          </span>
+        )}
+        {path && path.length > 0 && (
+          <span className="truncate text-xs text-gray-400">
+            Home / {path.map((p) => p.title).join(" / ")}
           </span>
         )}
       </span>

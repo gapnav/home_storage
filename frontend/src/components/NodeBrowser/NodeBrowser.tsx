@@ -1,4 +1,3 @@
-import { useState } from "react";
 import type { Node } from "@/types/node";
 import { useNodes, useNode } from "@/hooks/useNodes";
 import { Breadcrumb } from "./Breadcrumb";
@@ -6,14 +5,14 @@ import { NodeList } from "./NodeList";
 import { PlusIcon } from "@/components/icons";
 
 interface Props {
+  currentNodeId: number | null;
+  onNavigate: (id: number | null) => void;
   onCreateNode: (parentId: number | null) => void;
   onEditNode: (node: Node) => void;
   onDeleteNode: (id: number) => void;
 }
 
-export const NodeBrowser = ({ onCreateNode, onEditNode, onDeleteNode }: Props) => {
-  const [currentNodeId, setCurrentNodeId] = useState<number | null>(null);
-
+export const NodeBrowser = ({ currentNodeId, onNavigate, onCreateNode, onEditNode, onDeleteNode }: Props) => {
   const childrenQuery = useNodes(currentNodeId);
   const detailQuery = useNode(currentNodeId);
 
@@ -28,7 +27,7 @@ export const NodeBrowser = ({ onCreateNode, onEditNode, onDeleteNode }: Props) =
   return (
     <div className="flex flex-col gap-4">
       {path.length > 0 && (
-        <Breadcrumb path={path} onNavigate={setCurrentNodeId} />
+        <Breadcrumb path={path} onNavigate={onNavigate} />
       )}
 
       <NodeList
@@ -36,7 +35,7 @@ export const NodeBrowser = ({ onCreateNode, onEditNode, onDeleteNode }: Props) =
         isLoading={isLoading}
         isError={isError}
         emptyMessage="Nothing here yet."
-        onNavigate={setCurrentNodeId}
+        onNavigate={onNavigate}
         onEdit={onEditNode}
         onDelete={onDeleteNode}
       />

@@ -19,4 +19,8 @@ export interface NodeDetail extends Node {
   children: Node[];
 }
 
+export interface SearchNode extends Node {
+  path: BreadcrumbItem[];
+}
+
 export type FlatNode = Pick<Node, "id" | "title" | "parentId" | "nodeType"> & { depth: number };
