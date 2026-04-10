@@ -13,7 +13,7 @@ export const NodeRow = ({ node, path, onNavigate, onEdit, onDelete }: Props) => 
   const isStorage = node.nodeType === "storage";
 
   return (
-    <li className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-gray-50">
+    <li className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-zinc-800">
       <span className="shrink-0">
         {isStorage ? <StorageIcon /> : <ThingIcon />}
       </span>
@@ -22,25 +22,25 @@ export const NodeRow = ({ node, path, onNavigate, onEdit, onDelete }: Props) => 
         {isStorage ? (
           <button
             type="button"
-            className="truncate text-left font-medium text-gray-900 hover:text-blue-600 hover:underline"
+            className="truncate text-left font-medium text-zinc-300 hover:text-blue-400 hover:underline"
             onClick={() => onNavigate(node.id)}
           >
             {node.title}
           </button>
         ) : (
-          <span className="truncate font-medium text-gray-900">
+          <span className="truncate font-medium text-zinc-300">
             {node.title}
           </span>
         )}
         {path && path.length > 0 && (
-          <span className="truncate text-xs text-gray-400">
+          <span className="truncate text-xs text-zinc-500">
             Home / {path.map((p) => p.title).join(" / ")}
           </span>
         )}
       </span>
 
       {node.code && (
-        <span className="shrink-0 rounded bg-gray-100 px-2 py-0.5 font-mono text-xs text-gray-500">
+        <span className="shrink-0 rounded bg-zinc-700 px-2 py-0.5 font-mono text-xs text-zinc-400">
           {node.code}
         </span>
       )}
@@ -49,7 +49,7 @@ export const NodeRow = ({ node, path, onNavigate, onEdit, onDelete }: Props) => 
         <button
           type="button"
           aria-label={`Edit ${node.title}`}
-          className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+          className="rounded p-1 text-zinc-500 hover:bg-zinc-700 hover:text-zinc-300"
           onClick={() => onEdit(node)}
         >
           <EditIcon />
@@ -57,7 +57,7 @@ export const NodeRow = ({ node, path, onNavigate, onEdit, onDelete }: Props) => 
         <button
           type="button"
           aria-label={`Delete ${node.title}`}
-          className="rounded p-1 text-gray-400 hover:bg-red-50 hover:text-red-600"
+          className="rounded p-1 text-zinc-500 hover:bg-red-950 hover:text-red-500"
           onClick={() => onDelete(node.id)}
         >
           <DeleteIcon />

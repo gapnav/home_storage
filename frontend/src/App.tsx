@@ -25,14 +25,14 @@ const AppContent = () => {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
-      <h1 className="mb-6 text-2xl font-bold text-gray-900">Home Storage</h1>
+      <h1 className="mb-6 text-2xl font-bold text-zinc-300">Home Storage</h1>
 
       <div className="mb-4">
         <SearchBar value={searchQuery} onChange={setSearchQuery} />
       </div>
 
       {deleteNode.error && (
-        <p role="alert" className="mb-4 text-sm text-red-600">
+        <p role="alert" className="mb-4 text-sm text-red-500">
           {deleteNode.error.message}
         </p>
       )}

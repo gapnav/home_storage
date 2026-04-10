@@ -85,10 +85,10 @@ export const NodeForm = (props: Props) => {
       tabIndex={-1}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 focus:outline-none"
     >
-      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+      <div className="w-full max-w-md rounded-lg bg-zinc-800 p-6 shadow-xl">
         <h2
           id="node-form-title"
-          className="mb-4 text-lg font-semibold text-gray-900"
+          className="mb-4 text-lg font-semibold text-zinc-300"
         >
           {mode === "create" ? "Add item" : "Edit item"}
         </h2>
@@ -96,7 +96,7 @@ export const NodeForm = (props: Props) => {
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {mode === "create" && (
             <fieldset>
-              <legend className="mb-1 text-sm font-medium text-gray-700">
+              <legend className="mb-1 text-sm font-medium text-zinc-300">
                 Type
               </legend>
               <div className="flex gap-4">
@@ -162,7 +162,7 @@ export const NodeForm = (props: Props) => {
           </div>
 
           {error && (
-            <p role="alert" className="text-sm text-red-600">
+            <p role="alert" className="text-sm text-red-500">
               {error.message}
             </p>
           )}

@@ -8,11 +8,11 @@ interface Props {
 export const Breadcrumb = ({ path, onNavigate }: Props) => {
   return (
     <nav aria-label="breadcrumb">
-      <ol className="flex items-center gap-1 text-sm text-gray-600">
+      <ol className="flex items-center gap-1 text-sm text-zinc-500">
         <li>
           <button
             type="button"
-            className="hover:text-gray-900 hover:underline"
+            className="hover:text-zinc-300 hover:underline"
             onClick={() => onNavigate(null)}
           >
             Home
@@ -22,18 +22,18 @@ export const Breadcrumb = ({ path, onNavigate }: Props) => {
           const isLast = index === path.length - 1;
           return (
             <li key={item.id} className="flex items-center gap-1">
-              <span className="text-gray-400">/</span>
+              <span className="text-zinc-600">/</span>
               {isLast ? (
                 <span
                   aria-current="page"
-                  className="font-medium text-gray-900"
+                  className="font-medium text-zinc-300"
                 >
                   {item.title}
                 </span>
               ) : (
                 <button
                   type="button"
-                  className="hover:text-gray-900 hover:underline"
+                  className="hover:text-zinc-300 hover:underline"
                   onClick={() => onNavigate(item.id)}
                 >
                   {item.title}

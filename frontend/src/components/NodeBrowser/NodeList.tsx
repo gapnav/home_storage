@@ -25,12 +25,12 @@ export const NodeList = ({
   onDelete,
 }: Props) => {
   if (isLoading) {
-    return <p role="status" className="p-4 text-sm text-gray-500">{loadingMessage}</p>;
+    return <p role="status" className="p-4 text-sm text-zinc-500">{loadingMessage}</p>;
   }
 
   if (isError) {
     return (
-      <p role="alert" className="p-4 text-sm text-red-600">
+      <p role="alert" className="p-4 text-sm text-red-500">
         {errorMessage}
       </p>
     );
@@ -38,12 +38,12 @@ export const NodeList = ({
 
   if (!nodes.length) {
     return (
-      <p className="py-4 text-center text-sm text-gray-400">{emptyMessage}</p>
+      <p className="py-4 text-center text-sm text-zinc-500">{emptyMessage}</p>
     );
   }
 
   return (
-    <ul className="divide-y divide-gray-100">
+    <ul className="divide-y divide-zinc-700">
       {nodes.map((node) => (
         <NodeRow
           key={node.id}
