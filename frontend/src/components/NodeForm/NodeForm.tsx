@@ -108,6 +108,7 @@ export const NodeForm = (props: Props) => {
                       value={t}
                       checked={nodeType === t}
                       onChange={() => setNodeType(t)}
+                      className="accent-blue-500"
                     />
                     {t.charAt(0).toUpperCase() + t.slice(1)}
                   </label>

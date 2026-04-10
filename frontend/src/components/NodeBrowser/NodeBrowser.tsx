@@ -3,6 +3,7 @@ import { useNodes, useNode } from "@/hooks/useNodes";
 import { Breadcrumb } from "./Breadcrumb";
 import { NodeList } from "./NodeList";
 import { PlusIcon } from "@/components/icons";
+import { ActionButton } from "@/components/ui/ActionButton";
 
 interface Props {
   currentNodeId: number | null;
@@ -41,14 +42,10 @@ export const NodeBrowser = ({ currentNodeId, onNavigate, onCreateNode, onEditNod
       />
 
       <div className="flex justify-end">
-        <button
-          type="button"
-          className="flex items-center gap-1 rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
-          onClick={() => onCreateNode(currentNodeId)}
-        >
+        <ActionButton className="flex items-center gap-1" onClick={() => onCreateNode(currentNodeId)}>
           <PlusIcon />
           Add item
-        </button>
+        </ActionButton>
       </div>
     </div>
   );

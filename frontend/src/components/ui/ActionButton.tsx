@@ -11,11 +11,12 @@ const variantClasses: Record<NonNullable<Props["variant"]>, string> = {
 
 export const ActionButton = ({
   variant = "primary",
+  type = "button",
   className = "",
   ...props
 }: Props) => (
   <button
-    type="button"
+    type={type}
     className={`${variantClasses[variant]} ${className}`}
     {...props}
   />

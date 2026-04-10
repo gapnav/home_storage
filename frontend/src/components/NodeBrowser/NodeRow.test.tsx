@@ -140,7 +140,7 @@ describe("NodeRow", () => {
     expect(screen.queryByText(/^Home \//)).not.toBeInTheDocument();
   });
 
-  it("calls onDelete with node id when delete button is clicked", () => {
+  it("does not call onDelete immediately when delete button is clicked", () => {
     const onDelete = vi.fn();
     render(
       <NodeRow
@@ -151,7 +151,80 @@ describe("NodeRow", () => {
       />,
     );
     fireEvent.click(screen.getByRole("button", { name: "Delete Shed" }));
+    expect(onDelete).not.toHaveBeenCalled();
+  });
+
+  it("shows confirmation prompt after delete button is clicked", () => {
+    render(
+      <NodeRow
+        node={storageNode}
+        onNavigate={vi.fn()}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Delete Shed" }));
+    expect(screen.getByText("Delete?")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Confirm delete Shed" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Cancel delete" })).toBeInTheDocument();
+  });
+
+  it("calls onDelete when Yes is clicked in confirmation", () => {
+    const onDelete = vi.fn();
+    render(
+      <NodeRow
+        node={storageNode}
+        onNavigate={vi.fn()}
+        onEdit={vi.fn()}
+        onDelete={onDelete}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Delete Shed" }));
+    fireEvent.click(screen.getByRole("button", { name: "Confirm delete Shed" }));
     expect(onDelete).toHaveBeenCalledTimes(1);
     expect(onDelete).toHaveBeenCalledWith(1);
+  });
+
+  it("dismisses confirmation without deleting when No is clicked", () => {
+    const onDelete = vi.fn();
+    render(
+      <NodeRow
+        node={storageNode}
+        onNavigate={vi.fn()}
+        onEdit={vi.fn()}
+        onDelete={onDelete}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Delete Shed" }));
+    fireEvent.click(screen.getByRole("button", { name: "Cancel delete" }));
+    expect(onDelete).not.toHaveBeenCalled();
+    expect(screen.queryByText("Delete?")).not.toBeInTheDocument();
+  });
+
+  it("hides edit button while confirming", () => {
+    render(
+      <NodeRow
+        node={storageNode}
+        onNavigate={vi.fn()}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Delete Shed" }));
+    expect(screen.queryByRole("button", { name: "Edit Shed" })).not.toBeInTheDocument();
+  });
+
+  it("dismisses confirmation on Escape key", () => {
+    render(
+      <NodeRow
+        node={storageNode}
+        onNavigate={vi.fn()}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Delete Shed" }));
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByText("Delete?")).not.toBeInTheDocument();
   });
 });
